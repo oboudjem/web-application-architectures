@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ex1</title>
+</head>
+
+<body>	
+	<p id="demo"></p>
+	<p id="prix"></p>
+
+	<script>
+	var text = '{   "cars": [    ' + 
+	'{      "id": "p306",      "vehicule": "peugeot 306",      "pricePerDay": 20,      "pricePerKm": 0.10    },' + 
+    '{      "id": "rr-sport",      "pricePerDay": 60,      "pricePerKm": 0.30    },    ' + 
+	'{      "id": "p-boxster",      "pricePerDay": 100,      "pricePerKm": 0.45    }  ],' + 
+	
+	'"rentals": [' + 
+    '{      "id": "1-pb-92",      "driver": {        "firstName": "Paul",        "lastName": "Bismuth"      },' + 
+    '  "carId": "p306",      "pickupDate": "2015-09-12",      "returnDate": "2015-09-14",      "distance": 150    },' + 
+    '{      "id": "2-rs-92",      "driver": {        "firstName": "Rebecca",        "lastName": "Solanas"      },' + 
+    '  "carId": "rr-sport",      "pickupDate": "2015-09-09",      "returnDate": "2015-09-13",      "distance": 550    },' + 
+    '{      "id": "3-sa-92",      "driver": {        "firstName": " Sami",        "lastName": "Ameziane"      },' + 
+     ' "car_id": "p-boxster",      "pickupDate": "2015-09-12",      "returnDate": "2015-09-14",      "distance": 100    }  ]}';
+
+	obj = JSON.parse(text);
+	
+	document.getElementById("demo").innerHTML =
+	obj.cars[1].id + " > pricePerDay : " + obj.cars[1].pricePerDay;
+	
+	var cars = rentals.cars;
+	var driver = rentals.drivers;
+
+	var getnbofDays = function getnbofDays (start, end)
+	{
+		var diff = Date.parse(end)-Date.parse(start);
+		return diff / (24*60*60*1000) + 1 ;
+	};
+
+	var getCar= function getCar(id)
+	{
+		for (var i = 0 ; i < rental.rentals.length; i++ )
+			{
+				if (cars[i].id === id )
+				{
+					return cars [i];
+				}
+			}
+	}
+
+	var getRentalPrice = function getRentalPrice(driver)
+	{
+		var distance= driver.distance;
+		
+		var nbofDays = getnbofDays(driver.pickupDate, driver.returnDate);
+		
+		var rentedCar = getCar(driver.carId);
+		
+		return nbOfdays * rentedCar.pricerPerDay + distance * pricePerKm;
+	}
+	
+	document.getElementById("prix").innerHTML =
+	obj.rentals[0].driver.firstName + " doit payer " + getRentalPrice(obj.rentals[0].driver.firstName);
+	
+	
+	
+	</script>
+
+</body>
+</html>
