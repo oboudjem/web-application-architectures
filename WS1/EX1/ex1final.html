@@ -1,0 +1,212 @@
+<script>
+var rentals = {
+  "cars": [
+    {
+      "id": "p306",
+      "vehicule": "peugeot 306",
+      "pricePerDay": 20,
+      "pricePerKm": 0.10
+    },
+    {
+      "id": "rr-sport",
+      "pricePerDay": 60,
+      "pricePerKm": 0.30
+    },
+    {
+      "id": "p-boxster",
+      "pricePerDay": 100,
+      "pricePerKm": 0.45
+    }
+  ],
+  "drivers": [
+    {
+      "id": "1-pb-92",
+      "driver": {
+        "firstName": "Paul",
+        "lastName": "Bismuth"
+      },
+      "carId": "p306",
+      "pickupDate": "2015-09-12",
+      "returnDate": "2015-09-14",
+      "distance": 150,
+	  "insurance": true
+	  
+    },
+    {
+      "id": "2-rs-92",
+      "driver": {
+        "firstName": "Rebecca",
+        "lastName": "Solanas"
+      },
+      "carId": "rr-sport",
+      "pickupDate": "2015-09-09",
+      "returnDate": "2015-09-13",
+      "distance": 550,
+	  "insurance": false
+	  
+    },
+    {
+      "id": "3-sa-92",
+      "driver": {
+        "firstName": " Sami",
+        "lastName": "Ameziane"
+      },
+      "carId": "p-boxster",
+      "pickupDate": "2015-09-12",
+      "returnDate": "2015-09-14",
+      "distance": 100,
+	  "insurance": true
+	 
+            
+    }
+  ]
+}
+var cars = rentals.cars;
+var drivers = rentals.drivers;
+var getnbofDays = function getnbofDays (start, end)
+{
+	var diff = Date.parse(end) - Date.parse(start);
+	return diff / (24*60*60*1000) + 1 ;
+};
+var getCar= function getCar(id)
+{
+	for (var i = 0 ; i < cars.length; i++ )
+		{
+			if (cars[i].id === id )
+			{
+				return cars [i];
+			}
+		}
+};
+function getAmount(nbofDay, PricePerDay)
+{
+  var Price = 0;
+  if(nbofDay > 10)
+  {
+    Price = nbofDay * PricePerDay * 0.5;
+  }
+  else if(nbofDay > 4)
+  {
+    Price = nbofDay * PricePerDay * 0.7;
+  }
+  else if(nbofDay > 1)
+  {
+    Price = nbofDay * PricePerDay * 0.9;
+  }
+  else
+    Price = PricePerDay;
+    return Price;
+}
+
+var getRentalPrice = function getRentalPrice(drivers)
+{
+	var distance= drivers.distance;
+	
+	var nbofDay = getnbofDays(drivers.pickupDate, drivers.returnDate);
+	
+	var rentedCar = getCar(drivers.carId);
+	
+	return nbofDay * rentedCar.pricePerDay + distance * rentedCar.pricePerKm;
+};
+var getRentalPrice_exo2 = function getRentalPrice(drivers)
+{
+	var distance= drivers.distance;
+	
+	var nbofDay = getnbofDays(drivers.pickupDate, drivers.returnDate);
+	
+	var rentedCar = getCar(drivers.carId);
+	
+	var amount = getAmount(nbofDay, rentedCar.pricePerDay);
+	
+	return amount + distance * rentedCar.pricePerKm;
+};
+document.write("Ex1 ------------------------------------------------------------------------------- </br></br>");
+for(var i = 0 ; i< drivers.length;i++)
+{
+	document.write(drivers[i].driver.firstName+ " " + drivers[i].driver.lastName+ " : " + getRentalPrice(drivers[i])+ "</br></br>");
+}
+document.write("Ex2 ------------------------------------------------------------------------------- </br></br>");
+for(var i = 0 ; i< drivers.length;i++)
+{
+	document.write(drivers[i].driver.firstName+ " " + drivers[i].driver.lastName+ " : " + getRentalPrice_exo2(drivers[i])+ " </br> </br>");
+}
+document.write("Ex3 ------------------------------------------------------------------------------- </br></br>");
+	
+  for(var i = 0; i < drivers.length; i++)
+  {
+	var nbofDay = getnbofDays(drivers[i].pickupDate, drivers[i].returnDate);
+    var Price_rental = getAmount(nbofDay, cars[0].pricePerDay);
+    var PriceToPay = Price_rental + cars[0].pricePerKm*drivers[i].distance;
+    
+	var commission = 0.3 * PriceToPay;
+    var insurance = commission * 0.5;
+    var roadside = nbofDay * 1;
+    var drivy = commission - insurance - roadside;
+	
+    document.write("Driver's Id : " + drivers[i].id + "euros<br/>");
+    document.write("Total Price : " + PriceToPay + "euros<br/>");
+    document.write("Insurance : " + commission + "euros<br/>");
+    document.write("Roadside Assistance amount : " + roadside + "euros<br/>");
+    document.write("Drivy Price : " + drivy + "euros<br/><br/>");
+  }
+document.write("Ex4 ------------------------------------------------------------------------------- </br></br>");
+ for(var i = 0; i < drivers.length; i++)
+      {
+        var nbofDay = getnbofDays(drivers[i].pickupDate, drivers[i].returnDate);
+        var Price_rental = getAmount(nbofDay, cars[0].pricePerDay);
+        var PriceToPay = Price_rental + cars[0].pricePerKm*drivers[i].distance;
+        var deductibleReduction = 0;
+		
+        if(drivers[i].insurance)
+		{
+          deductibleReduction = 4 * nbofDay;
+		}
+		
+        var commission = 0.3 * PriceToPay;
+        var insurance = commission * 0.5;
+        var roadside = nbofDay * 1;
+        var drivy = commission - insurance - roadside;
+
+        PriceToPay += deductibleReduction;
+        drivy += deductibleReduction;
+  
+		document.write("Driver's Id : " + drivers[i].id + "<br/>");
+        document.write("Total Price : " + PriceToPay + "euros<br/>");
+		document.write("Insurance : " + insurance + "euros<br/>");
+        document.write("Roadside Assistance amount : " + roadside + "euros<br/>");
+        document.write("Drivy Price: " + drivy + "euros<br/>");
+        document.write("Reduction : " + deductibleReduction + "euros<br/><br/>");
+      }
+document.write("Ex5 ------------------------------------------------------------------------------- </br></br>");
+
+for(var i = 0; i < drivers.length; i++)
+      {
+		var nbofDay = getnbofDays(drivers[i].pickupDate, drivers[i].returnDate);
+        var Price_rental = getAmount(nbofDay, cars[0].pricePerDay);
+        var PriceToPay = Price_rental + cars[0].pricePerKm*drivers[i].distance;
+        var deductibleReduction = 0;
+		
+        if(drivers[i].insurance)
+		{
+          deductibleReduction = 4 * nbofDay;
+		}
+		
+		PriceToPay += deductibleReduction;
+        drivy += deductibleReduction;
+		
+		var commission = 0.3 * PriceToPay;
+		var owner = PriceToPay - commission;
+        var insurance = commission * 0.5;
+        var roadside = nbofDay * 1;
+        var drivy = commission - insurance - roadside;
+		
+		document.write("Driver's Id : " + drivers[i].id + "<br/>");
+		document.write("Driver debit : " + PriceToPay + " euros<br/>");
+        document.write("Owner  credit: " + owner + " euros<br/>");
+		document.write("Insurance credit : " + insurance + " euros<br/>");
+        document.write("Roadside Assistance credit : " + roadside + " euros<br/>");
+        document.write("Drivy credit: " + drivy + " euros<br/><br/>");
+      }
+	  
+document.write("Ex6 ------------------------------------------------------------------------------- </br></br>");
+</script>
